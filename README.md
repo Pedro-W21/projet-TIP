@@ -7,7 +7,7 @@ Repo de code pour le projet TIP de 4TC
 - cloner ce repo sur votre machine
 - Pour entraîner un modèle :
     - en entraînement "from scratch"
-        - changer le nom de fichier de réseau `networkFileName` utilisé pour appeler la fonction `main` dans `code/training_code.m` pour choisir le nom de fichier que vous voulez comme nom de réseau
+        - changer le nom de fichier de réseau `networkFileName` utilisé pour appeler la fonction `main` dans `code/training_code.m` pour choisir le nom de fichier que vous voulez une fois que le modèle entraîné sera sauvegardé après l'entraînement (pour le réutiliser plus tard)
         - changer le chemin `unzippedPath` utilisé pour appeler la fonction `main` dans `code/training_code.m` pour pointer vers votre copie locale du dataset `food-11`
         - lancer `training_code.m`
     - en entraînement par transfert
@@ -19,7 +19,7 @@ Repo de code pour le projet TIP de 4TC
 
 ## Comment changer le modèle "from scratch"
 
-- dans `training_code.m`
-    - changer la définition du modèle dans `create_model_layers`
+- dans `create_model_layers.m`
+    - changer la définition du modèle dans la fonction `create_model_layers`
 - dans `ModelConstants.m`
     - changer les constantes de modèle (si nécessaire) comme la taille de l'input
