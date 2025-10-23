@@ -27,7 +27,7 @@ function main(networkFileName, unzippedPath)
         
         % Train the network
         fprintf('\nStarting training...\n');
-        net = trainnet(augmentedTrainData, layers, "crossentropy", options);
+        net = trainNetwork(augmentedTrainData, layers, options);
         
         % Save the trained network
         save(networkFileName, 'net', 'classNames');
