@@ -13,8 +13,11 @@ function test_network(networkFile, datasetPath, testFileName)
         'IncludeSubfolders', true);
     testSet = augmentedImageDatastore(net.Layers(1).InputSize, testSet);
     
-
-    scores = predict(net,testSet);
+    try
+        scores = minibatchpredict(net,testSet);
+    catch ME
+        scores = predict(net,testSet);
+    end
     predictions = scores2label(scores,classNames);
     encoded = jsonencode(containers.Map(string(transpose(0:(length(predictions) - 1))),string(predictions)));
 

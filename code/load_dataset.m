@@ -1,4 +1,4 @@
-function [augmentedTrainData, resizedValidate, classNames] = load_dataset(unzippedPath)
+function [augmentedTrainData, resizedValidate, classNames, validateLabels] = load_dataset(unzippedPath)
     % Load and extract the food-11 dataset archive
     % Input: 
     % - archivePath : path to the .zip/.tar archive file
@@ -28,6 +28,8 @@ function [augmentedTrainData, resizedValidate, classNames] = load_dataset(unzipp
     validateIndices = 1:10:length(allData.Files);
     validateData = subset(allData, validateIndices);
 
+    validateLabels = validateData.Labels;
+
     resizedValidate = augmentedImageDatastore(ModelConstants.imgSize, validateData);
 
     allIndices = 1:1:length(allData.Files);
@@ -44,13 +46,11 @@ function [augmentedTrainData, resizedValidate, classNames] = load_dataset(unzipp
     % Boucle sur chaque classe pour répliquer
     for i = 1:height(tbl)
         thisLabel = tbl.Label(i);
+        
         % Récupère les fichiers de la classe courante
         files = trainData.Files(trainData.Labels == thisLabel);
         nFiles = numel(files);
-        if nFiles == 0
-            warning('Aucune image pour la classe %s — skip', string(thisLabel));
-            continue;
-        end
+
         % Indices aléatoires (avec remplacement) pour atteindre maxCount
         idx = randi(nFiles, [maxCount, 1]);
         filesRep = files(idx);
