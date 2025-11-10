@@ -35,6 +35,31 @@ function [augmentedTrainData, resizedValidate, classNames] = load_dataset(unzipp
     trainIndices = setdiff(allIndices, validateIndices);
     trainData = subset(allData, trainIndices);
 
+    tbl = countEachLabel(trainData);
+    maxCount = max(tbl.Count);
+
+    filesBalanced = {};
+    labelsBalanced = categorical();
+
+    % Boucle sur chaque classe pour répliquer
+    for i = 1:height(tbl)
+        thisLabel = tbl.Label(i);
+        % Récupère les fichiers de la classe courante
+        files = trainData.Files(trainData.Labels == thisLabel);
+        nFiles = numel(files);
+        if nFiles == 0
+            warning('Aucune image pour la classe %s — skip', string(thisLabel));
+            continue;
+        end
+        % Indices aléatoires (avec remplacement) pour atteindre maxCount
+        idx = randi(nFiles, [maxCount, 1]);
+        filesRep = files(idx);
+        filesBalanced = [filesBalanced; filesRep];
+        labelsBalanced = [labelsBalanced; repmat(thisLabel, numel(filesRep), 1)];
+    end
+
+    
+    balancedImds = imageDatastore(filesBalanced, 'Labels', labelsBalanced);
 
     augmenter = imageDataAugmenter( ...
         "RandRotation", [-10, 10], ...
@@ -43,17 +68,17 @@ function [augmentedTrainData, resizedValidate, classNames] = load_dataset(unzipp
         "RandXReflection",true ...
     );
 
-    augmentedTrainData = augmentedImageDatastore(ModelConstants.imgSize, trainData, "DataAugmentation", augmenter);
+    augmentedTrainData = augmentedImageDatastore(ModelConstants.imgSize, balancedImds, "DataAugmentation", augmenter);
 
-    classNames = unique(trainData.Labels);
+    classNames = unique(balancedImds.Labels);
     
     fprintf('Dataset loaded successfully!\n');
     fprintf('Number of classes: %d\n', length(classNames));
-    fprintf('Total training images: %d\n', length(trainData.Files));
+    fprintf('Total training images: %d\n', length(balancedImds.Files));
     fprintf('Classes: {%s}\n', strjoin(string(classNames), ', '));
     
 
-    classCounts = countcats(trainData.Labels);
+    classCounts = countcats(balancedImds.Labels);
     fprintf('\nClass distribution:\n');
     for i = 1:length(classNames)
         fprintf('  %s: %d images\n', classNames(i), classCounts(i));
