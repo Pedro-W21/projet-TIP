@@ -8,11 +8,10 @@ function predictions = predict_on_validate_set(networkFile, datasetPath)
     testSet = imageDatastore(testPath, ...
         'IncludeSubfolders', true);
 
-    validateIndices = 1:10:length(testSet.Files);
-    testSet = subset(testSet, validateIndices)
+    validateIndices = 1:5:length(testSet.Files);
+    testSet = subset(testSet, validateIndices);
     testSet = augmentedImageDatastore(net.Layers(1).InputSize, testSet);
-    testSet
-    net
+    
     try
         scores = minibatchpredict(net,testSet);
     catch ME

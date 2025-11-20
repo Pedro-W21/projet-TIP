@@ -9,9 +9,9 @@ function test_network(networkFile, datasetPath, testFileName)
     classNames = data.classNames;
 
     testPath = fullfile(datasetPath, 'test');
-    testSet = imageDatastore(testPath, ...
+    testSet_imds = imageDatastore(testPath, ...
         'IncludeSubfolders', true);
-    testSet = augmentedImageDatastore(net.Layers(1).InputSize, testSet);
+    testSet = augmentedImageDatastore(net.Layers(1).InputSize, testSet_imds);
     
     try
         scores = minibatchpredict(net,testSet);
