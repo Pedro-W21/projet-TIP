@@ -1,10 +1,7 @@
-clear all;
-close all;
-
-main("food11_network.mat", "../food-11")
-
-function main(networkFileName, unzippedPath)
-    
+function training_code(networkFileName, unzippedPath)
+    % function that performs a full training run on the model specified in create_model_layers.m with the provided food-11 dataset (technically any dataset formatted like the food-11 it expects)
+    % networkFileName : the name of the file you want the network to be output to
+    % unzippedPath : the path to your local food-11 dataset, relative or absolute
     try
         [augmentedTrainData, validateData, classNames, validateLabels] = load_dataset(unzippedPath);
         
@@ -46,9 +43,11 @@ function main(networkFileName, unzippedPath)
 
         % Save the trained network
         save(networkFileName, 'net', 'classNames');
-        fprintf('\nNetwork saved as food11_cnn_network.mat\n');
+        fprintf('\nNetwork saved\n');
         
     catch ME
         fprintf('Error: %s\n', ME.message);
     end
 end
+
+% exemple de call : training_code("food11_network.mat", "../food-11")

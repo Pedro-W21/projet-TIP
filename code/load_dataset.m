@@ -1,10 +1,12 @@
 function [augmentedTrainData, resizedValidate, classNames, validateLabels] = load_dataset(unzippedPath)
     % Load and extract the food-11 dataset archive
     % Input: 
-    % - archivePath : path to the .zip/.tar archive file
+    % - unzippedPath : path to the local dataset copy (top-level name included)
     % Output: 
-    % - trainData : imageDatastore object ready for CNN training
-    % - classNames : cell array of class names
+    % - AugmentedTrainData : an augmentedImageDatastore with our methods of data augmentation applied to it
+    % - resizedValidate : an augmentedImageDatastore containing the validation set resized to ModelConstants.imgSize
+    % - classNames : the class names, seperated because they are unintuitive to get from resizedValidate
+    % - validateLabels : the labels for all validation data, seperated because they are unintuitive to get from resizedValidate
    
     
     trainPath = fullfile(unzippedPath, 'train');
